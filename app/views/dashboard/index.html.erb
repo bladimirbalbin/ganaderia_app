@@ -1,0 +1,47 @@
+<h1 class="text-2xl font-bold mb-4">Panel de control</h1>
+
+<% if current_user.company.is_provider? %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-semibold mb-2">Total compañías</h2>
+      <p class="text-3xl font-bold"><%= @companies.count %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-semibold mb-2">Total usuarios</h2>
+      <p class="text-3xl font-bold"><%= @users.count %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-semibold mb-2">Planes activos</h2>
+      <p class="text-3xl font-bold"><%= @membership_plans.count %></p>
+    </div>
+  </div>
+
+<% elsif current_user.admin? %>
+  <div class="bg-white p-4 rounded shadow mb-4">
+    <h2 class="text-xl font-semibold mb-2">Mi empresa: <%= @company.name %></h2>
+    <p>Usuarios permitidos: <%= @company.users_limit %></p>
+    <p>Membresía activa hasta: <%= @company.active_until %></p>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-2">Usuarios</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <% @users.each do |user| %>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-semibold"><%= user.name %></p>
+        <p class="text-gray-600"><%= user.email %></p>
+      </div>
+    <% end %>
+  </div>
+
+<% elsif current_user.veterinario? %>
+  <h2 class="text-xl font-semibold mb-4">Animales a cargo</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <% @animals.each do |animal| %>
+      <div class="bg-white p-4 rounded shadow">
+        <p class="font-semibold"><%= animal.name %></p>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>Bienvenido al sistema</p>
+<% end %>

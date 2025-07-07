@@ -1,0 +1,68 @@
+<%= form_with(model: customer, local: true, class: "space-y-4") do |f| %>
+  <div>
+    <%= f.label :customer_type, "Tipo de cliente", class: "block font-semibold mb-1" %>
+    <%= f.select :customer_type, Customer.customer_types.keys.map { |k| [k.titleize, k] }, {}, class: "w-full border-gray-300 rounded" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :first_name, "Primer nombre", class: "block font-semibold mb-1" %>
+      <%= f.text_field :first_name, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :middle_name, "Segundo nombre", class: "block font-semibold mb-1" %>
+      <%= f.text_field :middle_name, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :last_name, "Primer apellido", class: "block font-semibold mb-1" %>
+      <%= f.text_field :last_name, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :second_last_name, "Segundo apellido", class: "block font-semibold mb-1" %>
+      <%= f.text_field :second_last_name, class: "w-full border-gray-300 rounded" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :document_type, "Tipo de documento", class: "block font-semibold mb-1" %>
+      <%= f.text_field :document_type, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :document_number, "Número de documento", class: "block font-semibold mb-1" %>
+      <%= f.text_field :document_number, class: "w-full border-gray-300 rounded" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :mobile_phone1, "Celular 1", class: "block font-semibold mb-1" %>
+      <%= f.telephone_field :mobile_phone1, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :mobile_phone2, "Celular 2", class: "block font-semibold mb-1" %>
+      <%= f.telephone_field :mobile_phone2, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :landline_phone, "Teléfono fijo", class: "block font-semibold mb-1" %>
+      <%= f.telephone_field :landline_phone, class: "w-full border-gray-300 rounded" %>
+    </div>
+    <div>
+      <%= f.label :email, "Correo electrónico", class: "block font-semibold mb-1" %>
+      <%= f.email_field :email, class: "w-full border-gray-300 rounded" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :address1, "Dirección 1", class: "block font-semibold mb-1" %>
+    <%= f.text_field :address1, class: "w-full border-gray-300 rounded" %>
+  </div>
+  <div>
+    <%= f.label :address2, "Dirección 2", class: "block font-semibold mb-1" %>
+    <%= f.text_field :address2, class: "w-full border-gray-300 rounded" %>
+  </div>
+
+  <div>
+    <%= f.submit class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+  </div>
+<% end %>

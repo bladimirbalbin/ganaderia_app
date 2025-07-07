@@ -1,0 +1,37 @@
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div class="mb-4 bg-red-100 text-red-700 p-2 rounded">
+      <h2 class="font-semibold"><%= pluralize(user.errors.count, "error") %> impidió guardar el usuario:</h2>
+      <ul class="list-disc ml-5">
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :email, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.email_field :email, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Correo electrónico" %>
+  </div>
+  
+  <div class="mb-4">
+    <%= form.label :role_id, "Rol", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.collection_select :role_id, Role.all, :id, :name, { prompt: "Selecciona un rol" }, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :password, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.password_field :password, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Contraseña" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :password_confirmation, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.password_field :password_confirmation, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Confirmar contraseña" %>
+  </div>
+
+  <div class="mt-4 flex space-x-2">
+    <%= form.submit "Guardar", class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+    <%= link_to "Volver a usuarios", users_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+  </div>
+<% end %>

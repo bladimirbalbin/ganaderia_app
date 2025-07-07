@@ -1,0 +1,43 @@
+<div class="overflow-x-auto">
+  <table class="min-w-full bg-white shadow rounded">
+    <thead>
+      <tr class="bg-gray-100 text-left text-gray-700 uppercase text-xs tracking-wider">
+        <th class="py-3 px-4">ID</th>
+        <th class="py-3 px-4">Tipo</th>
+        <th class="py-3 px-4">Nombre</th>
+        <th class="py-3 px-4">Documento</th>
+        <th class="py-3 px-4">Teléfono</th>
+        <th class="py-3 px-4 text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% customers.each_with_index do |customer, index| %>
+        <tr class="<%= index.even? ? 'bg-white' : 'bg-gray-50' %> hover:bg-gray-100">
+          <td class="py-3 px-4"><%= customer.id %></td>
+          <td class="py-3 px-4 capitalize"><%= customer.customer_type %></td>
+          <td class="py-3 px-4"><%= [customer.first_name, customer.last_name].compact.join(' ') %></td>
+          <td class="py-3 px-4"><%= customer.document_number %></td>
+          <td class="py-3 px-4"><%= customer.mobile_phone1 %></td>
+          <td class="py-3 px-4 text-center space-x-2">
+            <%= link_to customer_path(customer), class: "text-blue-600 hover:text-blue-800", title: "Ver" do %>
+              <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
+              </svg>
+            <% end %>
+            <%= link_to edit_customer_path(customer), class: "text-yellow-600 hover:text-yellow-800", title: "Editar" do %>
+              <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.036-9.036a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
+              </svg>
+            <% end %>
+            <%= link_to customer, method: :delete, data: { confirm: "¿Estás seguro?" }, class: "text-red-600 hover:text-red-800", title: "Eliminar" do %>
+              <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

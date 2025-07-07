@@ -1,0 +1,31 @@
+<%# app/views/users/edit.html.erb %>
+<div class="max-w-2xl mx-auto bg-white p-8 rounded shadow-md">
+  <h1 class="text-2xl font-semibold mb-6">Editar usuario</h1>
+
+  <%= form_with(model: @user, local: true) do |form| %>
+    <div class="mb-4">
+      <%= form.label :name, class: "block text-gray-700 font-medium mb-2" %>
+      <%= form.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :email, class: "block text-gray-700 font-medium mb-2" %>
+      <%= form.email_field :email, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :role_id, "Rol", class: "block text-gray-700 font-medium mb-2" %>
+      <%= form.collection_select :role_id, Role.all, :id, :name, { prompt: "Selecciona un rol" }, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
+    </div>
+
+    <div class="mb-6">
+      <%= form.label :company_id, "Compañía", class: "block text-gray-700 font-medium mb-2" %>
+      <%= form.collection_select :company_id, Company.all, :id, :name, { prompt: "Selecciona una compañía" }, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
+    </div>
+
+    <div class="flex space-x-4">
+      <%= form.submit "Guardar cambios", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+      <%= link_to "Cancelar", users_path, class: "bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition" %>
+    </div>
+  <% end %>
+</div>

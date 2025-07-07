@@ -1,0 +1,30 @@
+<h1 class="text-3xl font-bold mb-6 flex items-center space-x-2">
+  <svg class="h-7 w-7 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 01.88 7.906A5.5 5.5 0 0118 19H6a5.5 5.5 0 01-.88-10.906A4 4 0 016 7a4 4 0 014-4h4a4 4 0 014 4z" />
+  </svg>
+  <span>Clientes</span>
+</h1>
+
+<div class="flex justify-between items-center mb-4">
+  <%= form_with url: customers_path, method: :get, local: true, class: "flex space-x-2" do |f| %>
+    <%= f.text_field :q, params[:q], placeholder: "Buscar por nombre o documento...", class: "border border-gray-300 rounded px-3 py-2 w-64" %>
+    <%= f.submit "Buscar", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+  <% end %>
+
+  <div class="flex space-x-2">
+    <%= link_to "Exportar CSV", customers_path(format: :csv, q: params[:q]), class: "bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 flex items-center space-x-2" %>
+    <%= link_to new_customer_path, class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center space-x-2" do %>
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+      <span>Nuevo cliente</span>
+    <% end %>
+  </div>
+</div>
+
+<%= render partial: "table", locals: { customers: @customers } %>
+
+<div class="mt-4">
+  <%= paginate @customers, theme: 'tailwind' %>
+</div>
+

@@ -1,0 +1,20 @@
+/* app/assets/stylesheets/components.css */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded;
+}
+
+.table-default {
+  @apply min-w-full bg-white border border-gray-200 rounded-lg shadow-sm;
+}
+
+.th-default {
+  @apply py-2 px-4 text-left text-gray-700 font-medium;
+}
+
+.td-default {
+  @apply py-2 px-4;
+}
+
+.tr-hover {
+  @apply border-t hover:bg-gray-50;
+}

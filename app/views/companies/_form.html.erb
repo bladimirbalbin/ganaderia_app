@@ -1,0 +1,61 @@
+<%= form_with(model: company) do |form| %>
+  <% if company.errors.any? %>
+    <div class="mb-4 bg-red-100 text-red-700 p-2 rounded">
+      <h2 class="font-semibold"><%= pluralize(company.errors.count, "error") %> impidió guardar la compañía:</h2>
+      <ul class="list-disc ml-5">
+        <% company.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Name %>
+  <div class="mb-4">
+    <%= form.label :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :name, placeholder: "Nombre de la compañía", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <%# Contact Email %>
+  <div class="mb-4">
+    <%= form.label :contact_email, "Correo de contacto", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.email_field :contact_email, placeholder: "email@ejemplo.com", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :membership_plan_id, "Plan de membresía", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.collection_select :membership_plan_id, MembershipPlan.all, :id, :name,
+          { prompt: "Selecciona un plan" },
+          class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+
+  <%# Users limit %>
+  <div class="mb-4">
+    <%= form.label :users_limit, "Cantidad máxima de usuarios", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.number_field :users_limit, placeholder: "Ej: 10", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <%# Active until %>
+  <div class="mb-4">
+    <%= form.label :active_until, "Activa hasta", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.date_field :active_until, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <%# Active boolean %>
+  <div class="mb-4">
+    <%= form.label :active, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.check_box :active, class: "mr-2 leading-tight" %> Activa
+  </div>
+
+  <%# Admin boolean %>
+  <div class="mb-4">
+    <%= form.label :is_provider, "¿Es proveedor?", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.check_box :is_provider, class: "mr-2 leading-tight" %>
+  </div>
+
+  <div class="mt-4 flex space-x-2">
+    <%= form.submit "Guardar", class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+    <%= link_to "Volver a compañías", companies_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+  </div>
+<% end %>

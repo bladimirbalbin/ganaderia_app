@@ -1,0 +1,24 @@
+<%= form_with(model: role) do |form| %>
+  <% if role.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(role.errors.count, "error") %> prohibited this role from being saved:</h2>
+      <ul>
+        <% role.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= render 'shared/text_field', form: form, field: :name %>
+  </div>
+
+  <div>
+    <%= render 'shared/text_field', form: form, field: :description %>
+  </div>
+
+  <div class="mt-4">
+    <%= form.submit "Guardar", class: "btn-primary" %>
+  </div>
+<% end %>

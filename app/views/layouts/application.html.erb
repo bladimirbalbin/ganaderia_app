@@ -1,16 +1,60 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>GanaderiaApp</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ganadería App</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-blue-800 text-white flex-shrink-0 hidden md:block">
+        <div class="p-4 text-2xl font-bold">Ganadería App</div>
+        <nav class="mt-6">
+          <% if user_signed_in? %>
+            <% if current_user.provider? || current_user.admin? %>
+              <%= link_to "Dashboard", dashboard_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+              <%= link_to "Usuarios", users_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+              <% if current_user.provider? %>
+                <%= link_to "Empresas", companies_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+                <%= link_to "Planes de membresía", membership_plans_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+              <% end %>
+            <% elsif current_user.veterinario? %>
+              <%= link_to "Animales", "#", class: "block py-2.5 px-4 hover:bg-blue-700" %>
+              <%= link_to "Medicamentos", "#", class: "block py-2.5 px-4 hover:bg-blue-700" %>
+              <%= link_to "Historias clínicas", "#", class: "block py-2.5 px-4 hover:bg-blue-700" %>
+            <% end %>
+          <% end %>
+          <%= link_to "Perfil", edit_user_registration_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+          <%= link_to "Configuración", settings_path, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+        </nav>
+      </aside>
+
+      <!-- Content area -->
+      <div class="flex flex-col flex-1 overflow-auto">
+        <!-- Top bar -->
+        <header class="bg-white shadow p-4 flex justify-between items-center">
+          <div>
+            <% if user_signed_in? %>
+              <span class="font-semibold">Bienvenido, <%= current_user.email %></span>
+            <% end %>
+          </div>
+          <div>
+            <% if user_signed_in? %>
+              <%= button_to "Cerrar sesión", destroy_user_session_path, method: :delete, data: { confirm: "¿Estás seguro que deseas cerrar sesión?" }, class: "block py-2.5 px-4 hover:bg-blue-700" %>
+            <% end %>
+          </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="p-6">
+          <%= yield %>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

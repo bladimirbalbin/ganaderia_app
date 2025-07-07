@@ -1,0 +1,19 @@
+<h1 class="text-2xl font-semibold mb-4">Elige un plan de membresía</h1>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <% @plans.each do |plan| %>
+    <div class="border rounded p-4 shadow hover:shadow-md transition">
+      <h2 class="text-xl font-bold mb-2"><%= plan.name %></h2>
+      <p><strong>Usuarios permitidos:</strong> <%= plan.users_limit %></p>
+      <p><strong>Duración:</strong> <%= plan.duration_in_days %> días</p>
+      <p><strong>Precio:</strong> $<%= number_with_delimiter(plan.price, delimiter: '.') %> COP</p>
+
+      <%= button_to "Seleccionar este plan", activate_plan_company_path(current_user.company.id, plan_id: plan.id),
+          method: :post,
+          class: "mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-4">
+  <%= link_to "Volver", company_path(current_user.company), class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+</div>

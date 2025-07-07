@@ -1,0 +1,33 @@
+<h1 class="text-2xl font-semibold mb-4">Compañías</h1>
+
+<table class="table-default">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="th-default">Nombre</th>
+      <th class="th-default">Correo contacto</th>
+      <th class="th-default">Plan</th>
+      <th class="th-default">Usuarios permitidos</th>
+      <th class="th-default">Activa hasta</th>
+      <th class="th-default">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @companies.each do |company| %>
+      <tr class="tr-hover">
+        <td class="td-default"><%= company.name %></td>
+        <td class="td-default"><%= company.contact_email %></td>
+        <td class="td-default"><%= company.membership_plan&.name %></td>
+        <td class="td-default"><%= company.users_limit %></td>
+        <td class="td-default"><%= company.active_until %></td>
+        <td class="td-default space-x-2">
+          <%= link_to "Ver", company_path(company), class: "btn-primary" %>
+          <%= link_to "Editar", edit_company_path(company), class: "bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-3 rounded" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="mt-4">
+  <%= link_to "Nueva compañía", new_company_path, class: "btn-primary" %>
+</div>

@@ -1,1 +1,53 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom components / utilidades reutilizables */
+
+/* Inputs, selects, textareas */
+.input-default {
+  @apply border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+/* Labels */
+.label-default {
+  @apply block text-gray-700 text-sm font-bold mb-2;
+}
+
+/* Botón principal */
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+}
+
+/* Botón secundario */
+.btn-secondary {
+  @apply bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded;
+}
+
+/* Tablas */
+.table-default {
+  @apply min-w-full divide-y divide-gray-200;
+}
+
+.table-header {
+  @apply bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.table-row {
+  @apply bg-white;
+}
+
+.table-row-alt {
+  @apply bg-gray-50;
+}
+
+/* Títulos */
+.title {
+  @apply text-2xl font-bold mb-4 text-gray-800;
+}
+
+/* Espaciado de secciones */
+.section {
+  @apply mb-6;
+}
+

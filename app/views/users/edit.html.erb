@@ -1,31 +1,76 @@
-<%# app/views/users/edit.html.erb %>
-<div class="max-w-2xl mx-auto bg-white p-8 rounded shadow-md">
-  <h1 class="text-2xl font-semibold mb-6">Editar usuario</h1>
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Editar usuario</h1>
+  <p class="mb-6 text-gray-500">Actualiza los datos del usuario y asigna su rol y compañía.</p>
 
   <%= form_with(model: @user, local: true) do |form| %>
-    <div class="mb-4">
-      <%= form.label :name, class: "block text-gray-700 font-medium mb-2" %>
-      <%= form.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <%= form.label :email, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.email_field :email, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+      <div>
+        <%= form.label :role_id, "Rol", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.collection_select :role_id, Role.all, :id, :name, { prompt: "Selecciona un rol" }, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+      <div>
+        <%= form.label :company_id, "Compañía", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.collection_select :company_id, Company.all, :id, :name, { prompt: "Selecciona una compañía" }, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
     </div>
 
-    <div class="mb-4">
-      <%= form.label :email, class: "block text-gray-700 font-medium mb-2" %>
-      <%= form.email_field :email, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
-    </div>
+    <h2 class="text-xl font-semibold mt-6 mb-4 border-b pb-2">Datos personales</h2>
+    <%= form.fields_for :customer, @customer do |c_form| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= c_form.label :first_name, "Primer nombre", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :first_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :middle_name, "Segundo nombre", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :middle_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :last_name, "Primer apellido", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :last_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :second_last_name, "Segundo apellido", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :second_last_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+<%= c_form.label :document_type, "Tipo de documento", class: "block text-gray-700 font-medium mb-2" %>
+<%= c_form.select :document_type, Customer.document_types.map { |k, v| [k.upcase, v] }, {}, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :document_number, "Número de documento", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :document_number, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :address1, "Dirección principal", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :address1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :address2, "Dirección secundaria", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :address2, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :mobile_phone1, "Celular 1", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :mobile_phone1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :mobile_phone2, "Celular 2", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :mobile_phone2, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= c_form.label :landline_phone, "Teléfono fijo", class: "block text-gray-700 font-medium mb-2" %>
+          <%= c_form.text_field :landline_phone, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+      </div>
+    <% end %>
 
-    <div class="mb-4">
-      <%= form.label :role_id, "Rol", class: "block text-gray-700 font-medium mb-2" %>
-      <%= form.collection_select :role_id, Role.all, :id, :name, { prompt: "Selecciona un rol" }, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
-    </div>
-
-    <div class="mb-6">
-      <%= form.label :company_id, "Compañía", class: "block text-gray-700 font-medium mb-2" %>
-      <%= form.collection_select :company_id, Company.all, :id, :name, { prompt: "Selecciona una compañía" }, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" %>
-    </div>
-
-    <div class="flex space-x-4">
-      <%= form.submit "Guardar cambios", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
-      <%= link_to "Cancelar", users_path, class: "bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition" %>
+    <div class="mt-8 flex justify-end space-x-4">
+      <%= form.submit "Guardar cambios", class: "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition" %>
+      <%= link_to "Cancelar", users_path, class: "bg-gray-300 text-gray-800 px-5 py-2 rounded hover:bg-gray-400 transition" %>
     </div>
   <% end %>
 </div>

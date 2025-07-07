@@ -1,7 +1,8 @@
 class Company < ApplicationRecord
-  has_many :users
+  has_many :users, dependent: :destroy
   belongs_to :membership_plan, optional: true
-
+  has_one :customer, dependent: :destroy
+  accepts_nested_attributes_for :customer
   # Validaciones
   validates :name, presence: true
   validates :membership_plan, presence: true, unless: :is_provider?

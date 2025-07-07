@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'company_registrations/new'
+  get 'company_registrations/create'
   get 'customers/index'
   get 'customers/show'
   get 'customers/new'
@@ -10,7 +12,12 @@ Rails.application.routes.draw do
   get 'membership_plans/edit'
   devise_for :users
 
-  resources :users, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+  resources :users, only: [:show, :index, :new, :create, :edit, :update, :destroy] do
+    member do
+      get :edit_password
+      patch :change_password
+    end
+  end
   resources :roles
 
   resources :companies do
@@ -19,6 +26,8 @@ Rails.application.routes.draw do
       post :activate_plan
     end
   end
+
+  resources :company_registrations, only: [:new, :create]
 
   resources :membership_plans   # <== agrega esta línea
 

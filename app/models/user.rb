@@ -6,11 +6,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Validaciones
-  validates :name, presence: true
+  # Validaciones  
   validates :email, presence: true, uniqueness: true
+  validates :password, presence: true, on: :create
   validates :company, presence: true
   validates :role, presence: true
+  has_one :customer, dependent: :destroy
+  accepts_nested_attributes_for :customer 
 
   def admin?
     role.name == "Admin"

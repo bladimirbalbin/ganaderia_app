@@ -10,6 +10,12 @@ class Customer < ApplicationRecord
   validates :first_name, presence: true, if: -> { person? || veterinarian? }
   validates :last_name, presence: true, if: -> { person? || veterinarian? }
   scope :by_type, ->(type) { where(customer_type: type) if type.present? }
+  enum document_type: {
+  cc: "C",   # Cédula de ciudadanía
+  ce: "E",   # Cédula de extranjería
+  nit: "N",  # NIT
+  ti: "T"    # Tarjeta de identidad
+}
   require 'csv'
   def full_name
     [first_name, middle_name, last_name, second_last_name].compact.join(' ')

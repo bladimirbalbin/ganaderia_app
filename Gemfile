@@ -90,6 +90,5 @@ gem 'caxlsx_rails'
 
 gem 'ransack'      # búsqueda
 gem 'kaminari'     # paginación
-gem 'faker'        # datos falsos para seeds
 end
 

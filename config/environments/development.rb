@@ -74,5 +74,19 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-
+  # En config/environments/development.rb
+  config.debug_mode = :local  # Solo debugging local
+  # En config/environments/development.rb
+  config.after_initialize do
+    require 'debug'
+    if defined?(DEBUGGER__)
+      begin
+        DEBUGGER__.configure(
+          activate_on_trap: true,
+          open: false  # No abre puerto remoto
+        )
+      rescue NoMethodError
+      end    
+    end
+  end
 end

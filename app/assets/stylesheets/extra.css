@@ -1,0 +1,4 @@
+/* ejemplo: poner bordes suaves o sombra a formularios */
+.form-section {
+  @apply bg-white p-6 rounded-lg shadow-md mb-6;
+}

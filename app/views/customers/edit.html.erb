@@ -1,9 +1,46 @@
-<h1 class="text-2xl font-bold mb-6">
-  <%= action_name == "new" ? "Nuevo Cliente" : "Editar Cliente" %>
-</h1>
+<%# app/views/customers/edit.html.erb %>
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
+  <h1 class="text-2xl font-bold mb-4">Completa tus datos de facturación</h1>
+  <p class="mb-6 text-gray-500">Estos datos son necesarios para emitir facturas correctamente.</p>
 
-<div class="bg-white p-6 rounded shadow">
-  <%= render 'form', customer: @customer %>
+  <%= form_with(model: @customer, local: true) do |form| %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <div>
+        <%= form.label :first_name, "Primer nombre", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :first_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= form.label :last_name, "Primer apellido", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :last_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= form.label :document_type, "Tipo de documento", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.select :document_type, [["C - Cédula de ciudadanía", "C"], ["E - Cédula de extranjería", "E"], ["N - NIT", "N"], ["T - Tarjeta de identidad", "T"]], {}, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= form.label :document_number, "Número de documento", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :document_number, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= form.label :address1, "Dirección principal", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :address1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= form.label :mobile_phone1, "Celular principal", class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :mobile_phone1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+      </div>
+
+    </div>
+
+    <div class="mt-6 flex justify-end space-x-4">
+      <%= form.submit "Guardar datos", class: "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition" %>
+      <%= link_to "Cancelar", dashboard_path, class: "bg-gray-300 text-gray-800 px-5 py-2 rounded hover:bg-gray-400 transition" %>
+    </div>
+  <% end %>
 </div>
-
-<%= link_to "Volver", customers_path, class: "inline-block mt-4 text-blue-600 hover:underline" %>

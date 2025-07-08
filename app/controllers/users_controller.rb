@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :check_subscription, only: [:new, :create]
 
   # GET /users or /users.json
   def index
@@ -85,6 +86,12 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def check_subscription
+    unless current_user.company.can_manage_users?
+      redirect_to root_path, alert: "Debes activar tu suscripción para crear usuarios"
+    end
+  end
   def password_params
     params.require(:user).permit(:password, :password_confirmation)
   end

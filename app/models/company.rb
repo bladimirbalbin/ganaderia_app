@@ -3,16 +3,22 @@ class Company < ApplicationRecord
   belongs_to :membership_plan, optional: true
   has_one :customer, dependent: :destroy
   accepts_nested_attributes_for :customer
+  accepts_nested_attributes_for :users
   # Validaciones
   validates :name, presence: true
   validates :membership_plan, presence: true, unless: :is_provider?
   validates :users_limit, numericality: { only_integer: true, greater_than: 0 }, unless: :is_provider?
   validates :active_until, presence: true, unless: :is_provider?
   validate  :users_limit_cannot_be_less_than_current_users, unless: :is_provider?
+  validates :contact_email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, unless: -> { skip_document_validation }
 
   # Por defecto no es proveedora
   attribute :is_provider, :boolean, default: false
+  attr_accessor :skip_document_validation
 
+  def can_manage_users?
+    subscription_status == "active"
+  end
   # Comprueba si la membresía está activa
   def membership_active?
     is_provider? || (active? && active_until && active_until >= Date.today)

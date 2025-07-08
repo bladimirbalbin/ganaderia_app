@@ -1,38 +1,49 @@
 class CompanyRegistrationsController < ApplicationController
+  skip_before_action :authenticate_user!
+  layout 'application'
+
   def new
     @company = Company.new
     @company.build_customer
-    @user = User.new
+    @company.customer.customer_type = :company # Valor por defecto para tipo cliente
+    @company.users.build if @company.users.empty? # inicializamos el primer usuario admin
   end
 
   def create
     @company = Company.new(company_params)
-    @user = User.new(user_params)
-    @user.role = Role.find_by(name: 'Provider') # o 'Admin'
+    # Le ponemos status inicial
+    @company.subscription_status = "free"
+    @company.membership_plan = MembershipPlan.first # o el plan por defecto
+    @company.users_limit = 1
+    @company.active_until = 1.month.from_now
+
+
+    # Le asignamos el rol de Admin al primer user
+    if @company.users.any?
+      admin_role = Role.find_by(name: "Admin")
+      @company.users.first.role = admin_role
+    end
+
     if @company.save
-      @user.company = @company
-      if @user.save
-        sign_in(@user) # Devise: loguea el usuario
-        redirect_to dashboard_path, notice: "Empresa registrada correctamente"
-      else
-        @company.destroy # rollback empresa si falla usuario
-        render :new, alert: "Error al crear el usuario"
-      end
+      redirect_to new_user_session_path, notice: "Empresa registrada correctamente. Ahora inicia sesión con el usuario administrador."
     else
-      render :new, alert: "Error al registrar la empresa"
+      flash.now[:alert] = "Hubo errores al registrar la empresa."
+      puts @company.errors.full_messages
+      @company.users.each { |u| puts u.errors.full_messages }
+      render :new
     end
   end
 
   private
 
   def company_params
-    params.require(:company).permit(:name,
-      customer_attributes: [:customer_type, :document_type, :document_number, 
-                            :address1, :address2, :mobile_phone1, :mobile_phone2, 
-                            :landline_phone, :email])
-  end
-
-  def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
+    params.require(:company).permit(
+      :name, :contact_email,
+      customer_attributes: [
+        :customer_type, :document_type, :document_number,
+        :address1, :address2, :mobile_phone1, :mobile_phone2, :landline_phone
+      ],
+      users_attributes: [:email, :password, :password_confirmation]
+    )
   end
 end

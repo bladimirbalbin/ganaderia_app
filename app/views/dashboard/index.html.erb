@@ -27,7 +27,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <% @users.each do |user| %>
       <div class="bg-white p-4 rounded shadow">
-        <p class="font-semibold"><%= user.name %></p>
+        <p class="font-semibold"><%= user.customer&.full_name %></p>
         <p class="text-gray-600"><%= user.email %></p>
       </div>
     <% end %>

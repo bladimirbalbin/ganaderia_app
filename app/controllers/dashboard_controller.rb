@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  before_action :authenticate_user!  # <== esto es clave
+  before_action :authenticate_user!
 
   def index
     @user = current_user
@@ -14,14 +14,21 @@ class DashboardController < ApplicationController
       @companies = Company.all
       @users = User.all
       @membership_plans = MembershipPlan.all
+
     elsif @user.admin?
       @company = @user.company
-      @users = @company.users
+      if @company.present?
+        @users = @company.users
+      else
+        flash[:alert] = "Debes completar el registro de la empresa antes de continuar."
+        redirect_to new_company_registration_path and return
+      end
+
     elsif @user.veterinario?
       @animals = Animal.where(veterinario_id: @user.id)
+
     else
       redirect_to root_path, alert: "No tienes permisos para ver este panel"
     end
   end
-
 end

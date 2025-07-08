@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_07_031632) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_08_020027) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_07_031632) do
     t.integer "users_limit"
     t.date "active_until"
     t.bigint "membership_plan_id"
+    t.string "subscription_status", default: "free"
     t.index ["membership_plan_id"], name: "index_companies_on_membership_plan_id"
   end
 
@@ -44,6 +45,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_07_031632) do
     t.string "landline_phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_customers_on_company_id"
     t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
@@ -82,6 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_07_031632) do
   end
 
   add_foreign_key "companies", "membership_plans"
+  add_foreign_key "customers", "companies"
   add_foreign_key "customers", "users"
   add_foreign_key "users", "companies"
   add_foreign_key "users", "roles"

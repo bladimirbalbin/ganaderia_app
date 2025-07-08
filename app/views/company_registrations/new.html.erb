@@ -2,21 +2,23 @@
   <h1 class="text-3xl font-bold mb-6 text-gray-800">Registro de empresa</h1>
   <p class="mb-6 text-gray-500">Completa la información de tu empresa y crea el primer usuario administrador.</p>
 
-  <%= form_with url: company_registrations_path, local: true do |f| %>
+  <%= form_with model: @company, url: company_registrations_path, local: true do |f| %>
+    <%= render 'shared/form_errors', object: @company %>
     <h2 class="text-xl font-semibold mb-4 border-b pb-2">Datos de la empresa</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <%= f.label :name, "Nombre comercial", class: "block text-gray-700 font-medium mb-2" %>
-        <%= f.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
+    <div class="mb-6">
+      <%= f.label :name, "Nombre comercial", class: "block text-gray-700 font-medium mb-2" %>
+      <%= f.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
     </div>
 
     <h2 class="text-xl font-semibold mb-4 border-b pb-2">Datos fiscales / contacto</h2>
-    <%= f.fields_for :customer, @company.customer do |c_form| %>
+    <%= f.fields_for :customer do |c_form| %>
+      <%= c_form.hidden_field :customer_type, value: :company %>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
+        <div>          
           <%= c_form.label :customer_type, "Tipo de cliente", class: "block text-gray-700 font-medium mb-2" %>
-          <%= c_form.text_field :customer_type, placeholder: "Ej: Empresa / Persona natural", class: "w-full border border-gray-300 rounded px-3 py-2" %>
+          <div class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+            Empresa
+          </div>
         </div>
         <div>
           <%= c_form.label :document_type, "Tipo de documento", class: "block text-gray-700 font-medium mb-2" %>
@@ -25,10 +27,6 @@
         <div>
           <%= c_form.label :document_number, "Número de documento", class: "block text-gray-700 font-medium mb-2" %>
           <%= c_form.text_field :document_number, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-        </div>
-        <div>
-          <%= c_form.label :email, "Email de contacto", class: "block text-gray-700 font-medium mb-2" %>
-          <%= c_form.email_field :email, class: "w-full border border-gray-300 rounded px-3 py-2" %>
         </div>
         <div>
           <%= c_form.label :address1, "Dirección principal", class: "block text-gray-700 font-medium mb-2" %>
@@ -50,24 +48,30 @@
           <%= c_form.label :landline_phone, "Teléfono fijo", class: "block text-gray-700 font-medium mb-2" %>
           <%= c_form.text_field :landline_phone, class: "w-full border border-gray-300 rounded px-3 py-2" %>
         </div>
+        <div>
+          <%= f.label :contact_email, "Email de contacto", class: "block text-gray-700 font-medium mb-2" %>
+          <%= f.email_field :contact_email, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
       </div>
     <% end %>
 
     <h2 class="text-xl font-semibold mb-4 border-b pb-2">Datos del usuario administrador</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <%= f.label :user_email, "Email", class: "block text-gray-700 font-medium mb-2" %>
-        <%= f.email_field :user_email, name: 'user[email]', class: "w-full border border-gray-300 rounded px-3 py-2" %>
+    <%= f.fields_for :users, @company.users do |u_form| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <%= u_form.label :email, "Email", class: "block text-gray-700 font-medium mb-2" %>
+          <%= u_form.email_field :email, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= u_form.label :password, "Contraseña", class: "block text-gray-700 font-medium mb-2" %>
+          <%= u_form.password_field :password, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= u_form.label :password_confirmation, "Confirmación de contraseña", class: "block text-gray-700 font-medium mb-2" %>
+          <%= u_form.password_field :password_confirmation, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+        </div>
       </div>
-      <div>
-        <%= f.label :user_password, "Contraseña", class: "block text-gray-700 font-medium mb-2" %>
-        <%= f.password_field :user_password, name: 'user[password]', class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-      <div>
-        <%= f.label :user_password_confirmation, "Confirmación de contraseña", class: "block text-gray-700 font-medium mb-2" %>
-        <%= f.password_field :user_password_confirmation, name: 'user[password_confirmation]', class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-    </div>
+    <% end %>
 
     <div class="mt-8 flex justify-end">
       <%= f.submit "Registrar empresa", class: "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition" %>

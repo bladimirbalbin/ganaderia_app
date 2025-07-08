@@ -8,19 +8,22 @@ class User < ApplicationRecord
 
   # Validaciones  
   validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, unless: -> { skip_document_validation }
   validates :password, presence: true, on: :create
   validates :company, presence: true
   validates :role, presence: true
   has_one :customer, dependent: :destroy
   accepts_nested_attributes_for :customer 
+  attr_accessor :skip_document_validation
 
   def admin?
     role.name == "Admin"
   end
 
   def provider?
-    company.is_provider?
+    current_user.present? && current_user.company.present? && current_user.company.is_provider?
   end
+
 
   def membership_active?
     company.membership_active?

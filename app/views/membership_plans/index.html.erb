@@ -1,19 +1,207 @@
-<h1 class="text-2xl font-semibold mb-4">Elige un plan de membresía</h1>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-  <% @plans.each do |plan| %>
-    <div class="border rounded p-4 shadow hover:shadow-md transition">
-      <h2 class="text-xl font-bold mb-2"><%= plan.name %></h2>
-      <p><strong>Usuarios permitidos:</strong> <%= plan.users_limit %></p>
-      <p><strong>Duración:</strong> <%= plan.duration_in_days %> días</p>
-      <p><strong>Precio:</strong> $<%= number_with_delimiter(plan.price, delimiter: '.') %> COP</p>
-
-      <%= button_to "Seleccionar este plan", activate_plan_company_path(current_user.company.id, plan_id: plan.id),
-          method: :post,
-          class: "mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Planes de Membresía</h1>
+      <p class="mt-2 text-sm text-gray-600">
+        <% if current_user.provider? %>
+          Gestiona los planes de membresía disponibles para las empresas del sistema
+        <% else %>
+          Selecciona el plan que mejor se adapte a tus necesidades
+        <% end %>
+      </p>
     </div>
-  <% end %>
-</div>
 
-<div class="mt-4">
-  <%= link_to "Volver", company_path(current_user.company), class: "bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+    <% if current_user.provider? %>
+      <!-- Vista para proveedores - Gestión completa -->
+      <div class="mb-6 flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Todos los Planes</h2>
+        <%= link_to new_membership_plan_path, 
+            class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out" do %>
+          <svg class="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Crear Nuevo Plan
+        <% end %>
+      </div>
+
+      <!-- Tabla de planes para proveedores -->
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuarios</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @plans.each do |plan| %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= plan.name %></td>
+                  <td class="px-6 py-4 text-sm text-gray-900">
+                    <div class="max-w-xs truncate" title="<%= plan.description %>">
+                      <%= plan.description %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    $<%= number_with_delimiter(plan.price, delimiter: '.') %> COP
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= plan.users_limit %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= plan.duration_in_days %> días</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                      <%= plan.active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= plan.active? ? 'Activo' : 'Inactivo' %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                    <div class="flex justify-center space-x-2">
+                      <%= link_to membership_plan_path(plan), class: "text-blue-600 hover:text-blue-900", title: "Ver" do %>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
+                        </svg>
+                      <% end %>
+                      
+                      <%= link_to edit_membership_plan_path(plan), class: "text-yellow-600 hover:text-yellow-900", title: "Editar" do %>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.036-9.036a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
+                        </svg>
+                      <% end %>
+                      
+                      <%= link_to membership_plan_path(plan), method: :delete, data: { confirm: "¿Estás seguro de que quieres eliminar este plan?" }, class: "text-red-600 hover:text-red-900", title: "Eliminar" do %>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Back Link -->
+      <div class="mt-8">
+        <%= link_to settings_path, 
+            class: "inline-flex items-center text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out" do %>
+          <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Volver a configuración
+        <% end %>
+      </div>
+
+    <% elsif current_user.company.present? %>
+      <% if current_user.company.is_provider? %>
+        <!-- Mensaje para empresas proveedoras -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-purple-100 mb-4">
+            <svg class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Empresa Proveedora</h3>
+          <p class="text-gray-600 mb-6">
+            Como empresa proveedora del sistema, no necesitas un plan de membresía. Tienes acceso completo a todas las funcionalidades.
+          </p>
+          <%= link_to "Volver al panel de administración", settings_path, 
+              class: "bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out" %>
+        </div>
+      <% else %>
+        <!-- Plans Grid para empresas cliente -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @plans.each do |plan| %>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <div class="p-6">
+                <div class="text-center mb-4">
+                  <h2 class="text-2xl font-bold text-gray-900 mb-2"><%= plan.name %></h2>
+                  <div class="text-3xl font-bold text-blue-600">
+                    $<%= number_with_delimiter(plan.price, delimiter: '.') %>
+                    <span class="text-sm text-gray-500">COP</span>
+                  </div>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                  <div class="flex items-center">
+                    <svg class="h-5 w-5 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-gray-700"><strong><%= plan.users_limit %></strong> usuarios permitidos</span>
+                  </div>
+                  <div class="flex items-center">
+                    <svg class="h-5 w-5 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-gray-700"><strong><%= plan.duration_in_days %></strong> días de duración</span>
+                  </div>
+                  <% if plan.description.present? %>
+                    <div class="text-sm text-gray-600 mt-4">
+                      <%= plan.description %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="space-y-3">
+                  <% if current_user.company.membership_active? %>
+                    <% if current_user.company.membership_plan_id == plan.id %>
+                      <div class="bg-green-100 text-green-800 text-center py-2 px-4 rounded-md font-medium">
+                        Plan Actual
+                      </div>
+                    <% else %>
+                      <%= button_to "Cambiar a este plan", 
+                          activate_plan_company_path(current_user.company.id, plan_id: plan.id),
+                          method: :post,
+                          class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition duration-150 ease-in-out",
+                          data: { confirm: "¿Estás seguro de que quieres cambiar a este plan?" } %>
+                    <% end %>
+                  <% else %>
+                    <%= button_to "Seleccionar este plan", 
+                        activate_plan_company_path(current_user.company.id, plan_id: plan.id),
+                        method: :post,
+                        class: "w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-md transition duration-150 ease-in-out" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Back Link -->
+        <div class="mt-8">
+          <%= link_to company_path(current_user.company), 
+              class: "inline-flex items-center text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out" do %>
+            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver a mi empresa
+          <% end %>
+        </div>
+      <% end %>
+
+    <% else %>
+      <!-- No Company Assigned -->
+      <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+        <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-red-100 mb-4">
+          <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Empresa no asignada</h3>
+        <p class="text-gray-600 mb-6">
+          Tu cuenta no tiene una empresa asignada. Contacta al administrador para resolver este problema.
+        </p>
+        <%= link_to "Volver al inicio", root_path, 
+            class: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out" %>
+      </div>
+    <% end %>
+  </div>
 </div>

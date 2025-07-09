@@ -26,7 +26,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <%= f.label :document_type, "Tipo de documento", class: "block font-semibold mb-1" %>
-      <%= f.text_field :document_type, class: "w-full border-gray-300 rounded" %>
+      <%= f.select :document_type, Customer.document_types.keys.map { |k| [k.upcase, k] }, {}, class: "w-full border-gray-300 rounded" %>
     </div>
     <div>
       <%= f.label :document_number, "Número de documento", class: "block font-semibold mb-1" %>
@@ -46,10 +46,6 @@
     <div>
       <%= f.label :landline_phone, "Teléfono fijo", class: "block font-semibold mb-1" %>
       <%= f.telephone_field :landline_phone, class: "w-full border-gray-300 rounded" %>
-    </div>
-    <div>
-      <%= f.label :email, "Correo electrónico", class: "block font-semibold mb-1" %>
-      <%= f.email_field :email, class: "w-full border-gray-300 rounded" %>
     </div>
   </div>
 

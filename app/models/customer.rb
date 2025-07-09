@@ -30,7 +30,7 @@ class Customer < ApplicationRecord
     [first_name, middle_name, last_name, second_last_name].compact.join(' ')
   end
   def self.to_csv
-    attributes = %w{id customer_type first_name last_name document_type document_number mobile_phone1 email}
+    attributes = %w{id customer_type first_name last_name document_type document_number mobile_phone1 address1}
     CSV.generate(headers: true) do |csv|
       csv << attributes
       all.each do |customer|

@@ -2,6 +2,13 @@ class Company < ApplicationRecord
   has_many :users, dependent: :destroy
   belongs_to :membership_plan, optional: true
   has_one :customer, dependent: :destroy
+  has_many :animals, dependent: :destroy
+  has_many :animal_events, dependent: :destroy
+  has_many :inseminations, dependent: :destroy
+  has_many :palpations, dependent: :destroy
+  has_many :births, dependent: :destroy
+  has_many :milk_productions, dependent: :destroy
+  has_many :weight_records, dependent: :destroy
   accepts_nested_attributes_for :customer
   accepts_nested_attributes_for :users
   # Validaciones
@@ -17,11 +24,14 @@ class Company < ApplicationRecord
   attr_accessor :skip_document_validation
 
   def can_manage_users?
-    subscription_status == "active"
+    is_provider? || subscription_status == "active"
   end
   # Comprueba si la membresía está activa
   def membership_active?
-    is_provider? || (active? && active_until && active_until >= Date.today)
+    return true if is_provider?
+    return false unless active?
+    return false unless active_until.present?
+    active_until >= Date.today
   end
 
   # Comprueba si puede crear más usuarios según el límite

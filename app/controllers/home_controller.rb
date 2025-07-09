@@ -5,7 +5,11 @@ class HomeController < ApplicationController
         redirect_to companies_path
       elsif current_user.admin?
         # redirigir a dashboard de la empresa
-        redirect_to company_path(current_user.company)
+        if current_user.company.present?
+          redirect_to company_path(current_user.company)
+        else
+          redirect_to dashboard_path
+        end
       elsif current_user.veterinario?
         # ejemplo: redirigir a sección de animales
         redirect_to animals_path

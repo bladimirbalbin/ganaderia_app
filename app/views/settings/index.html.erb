@@ -1,2 +1,441 @@
-<h1>Settings#index</h1>
-<p>Find me in app/views/settings/index.html.erb</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">
+            <% if current_user.provider? %>
+              Panel de Administración del Sistema
+            <% else %>
+              Panel de Administración de <%= current_user.company.name %>
+            <% end %>
+          </h1>
+          <p class="mt-1 text-sm text-gray-500">
+            <% if current_user.provider? %>
+              Gestión y configuración global del sistema
+            <% else %>
+              Gestión y configuración de tu empresa
+            <% end %>
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <% if current_user.provider? %>
+              Administrador del Sistema
+            <% else %>
+              Administrador
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Estadísticas principales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Usuarios -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                  <% if current_user.provider? %>
+                    Total Usuarios
+                  <% else %>
+                    Usuarios de la Empresa
+                  <% end %>
+                </dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @total_users %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <a href="<%= users_path %>" class="font-medium text-blue-700 hover:text-blue-900">
+              <% if current_user.provider? %>
+                Ver todos los usuarios
+              <% else %>
+                Ver usuarios de la empresa
+              <% end %>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Empresas -->
+      <% if current_user.provider? %>
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Empresas</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @total_companies %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-5 py-3">
+            <div class="text-sm">
+              <a href="<%= companies_path %>" class="font-medium text-blue-700 hover:text-blue-900">Ver todas las empresas</a>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Membresías Activas -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <% if current_user.provider? %>
+                <svg class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <% elsif current_user.company.membership_active? %>
+                <svg class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <% else %>
+                <svg class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              <% end %>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                  <% if current_user.provider? %>
+                    Membresías Activas
+                  <% else %>
+                    Estado de Membresía
+                  <% end %>
+                </dt>
+                <dd class="text-lg font-medium text-gray-900">
+                  <% if current_user.provider? %>
+                    <%= @system_stats[:active_memberships] %>
+                  <% elsif current_user.company.membership_active? %>
+                    Activa
+                  <% else %>
+                    Pendiente
+                  <% end %>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <% if current_user.provider? %>
+              <a href="<%= membership_plans_path %>" class="font-medium text-blue-700 hover:text-blue-900">
+                Gestionar planes
+              </a>
+            <% else %>
+              <% if current_user.company.membership_plan.present? %>
+                <a href="<%= select_plan_company_path(current_user.company) %>" class="font-medium text-blue-700 hover:text-blue-900">
+                  Ver plan actual
+                </a>
+              <% else %>
+                <a href="<%= select_plan_company_path(current_user.company) %>" class="font-medium text-blue-700 hover:text-blue-900">
+                  Seleccionar plan
+                </a>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Clientes -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">
+                  <% if current_user.provider? %>
+                    Total Clientes
+                  <% else %>
+                    Clientes de la Empresa
+                  <% end %>
+                </dt>
+                <dd class="text-lg font-medium text-gray-900"><%= @total_customers %></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-5 py-3">
+          <div class="text-sm">
+            <a href="<%= customers_path %>" class="font-medium text-blue-700 hover:text-blue-900">
+              <% if current_user.provider? %>
+                Ver todos los clientes
+              <% else %>
+                Ver clientes de la empresa
+              <% end %>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas del mes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Actividad del Mes</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600"><%= @system_stats[:users_this_month] %></div>
+              <div class="text-sm text-gray-500">
+                <% if current_user.provider? %>
+                  Nuevos usuarios
+                <% else %>
+                  Nuevos usuarios en la empresa
+                <% end %>
+              </div>
+            </div>
+            <% if current_user.provider? %>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600"><%= @system_stats[:companies_this_month] %></div>
+                <div class="text-sm text-gray-500">Nuevas empresas</div>
+              </div>
+            <% else %>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600"><%= @system_stats[:active_memberships] %></div>
+                <div class="text-sm text-gray-500">Membresía activa</div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            <% if current_user.provider? %>
+              Estado de Membresías
+            <% else %>
+              Estado de tu Membresía
+            <% end %>
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600"><%= @system_stats[:active_memberships] %></div>
+              <div class="text-sm text-gray-500">Activas</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-red-600"><%= @system_stats[:inactive_memberships] %></div>
+              <div class="text-sm text-gray-500">Inactivas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enlaces rápidos de administración -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Acciones Rápidas</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="<%= new_user_path %>" class="group relative rounded-lg p-6 bg-blue-50 hover:bg-blue-100 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
+            <div>
+              <span class="rounded-lg inline-flex p-3 bg-blue-600 text-blue-50 ring-4 ring-white">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="mt-8">
+              <h3 class="text-lg font-medium">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                Crear Usuario
+              </h3>
+              <p class="mt-2 text-sm text-gray-500">
+                <% if current_user.provider? %>
+                  Agregar un nuevo usuario al sistema
+                <% else %>
+                  Agregar un nuevo usuario a la empresa
+                <% end %>
+              </p>
+            </div>
+          </a>
+
+          <% if current_user.provider? %>
+            <a href="<%= new_company_path %>" class="group relative rounded-lg p-6 bg-green-50 hover:bg-green-100 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-500">
+              <div>
+                <span class="rounded-lg inline-flex p-3 bg-green-600 text-green-50 ring-4 ring-white">
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="mt-8">
+                <h3 class="text-lg font-medium">
+                  <span class="absolute inset-0" aria-hidden="true"></span>
+                  Crear Empresa
+                </h3>
+                <p class="mt-2 text-sm text-gray-500">Registrar una nueva empresa</p>
+              </div>
+            </a>
+          <% end %>
+
+          <% if current_user.provider? %>
+            <a href="<%= new_membership_plan_path %>" class="group relative rounded-lg p-6 bg-purple-50 hover:bg-purple-100 focus-within:ring-2 focus-within:ring-inset focus-within:ring-purple-500">
+              <div>
+                <span class="rounded-lg inline-flex p-3 bg-purple-600 text-purple-50 ring-4 ring-white">
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </span>
+              </div>
+              <div class="mt-8">
+                <h3 class="text-lg font-medium">
+                  <span class="absolute inset-0" aria-hidden="true"></span>
+                  Crear Plan
+                </h3>
+                <p class="mt-2 text-sm text-gray-500">Crear un nuevo plan de membresía</p>
+              </div>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usuarios recientes -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <% if current_user.provider? %>
+              Usuarios Recientes
+            <% else %>
+              Usuarios Recientes de la Empresa
+            <% end %>
+          </h3>
+          <a href="<%= users_path %>" class="text-sm font-medium text-blue-600 hover:text-blue-500">
+            <% if current_user.provider? %>
+              Ver todos
+            <% else %>
+              Ver todos los usuarios
+            <% end %>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                <% if current_user.provider? %>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                <% end %>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @recent_users.each do |user| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                          <span class="text-sm font-medium text-gray-700"><%= user.email.first.upcase %></span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900"><%= user.email %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <% if current_user.provider? %>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"><%= safe_company_name(user) %></div>
+                    </td>
+                  <% end %>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= role_badge(user) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= user.created_at.strftime("%d/%m/%Y") %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empresas recientes - Solo para proveedores -->
+    <% if current_user.provider? %>
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Empresas Recientes</h3>
+            <a href="<%= companies_path %>" class="text-sm font-medium text-blue-600 hover:text-blue-500">Ver todas</a>
+          </div>
+          <div class="overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% @recent_companies.each do |company| %>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900"><%= company.name %></div>
+                      <div class="text-sm text-gray-500"><%= company.contact_email %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"><%= company.membership_plan&.name || 'Sin plan' %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <% if company.is_provider? %>
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                          Proveedor
+                        </span>
+                      <% else %>
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= company.membership_active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                          <%= company.membership_active? ? 'Activa' : 'Inactiva' %>
+                        </span>
+                      <% end %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <%= company.created_at.strftime("%d/%m/%Y") %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

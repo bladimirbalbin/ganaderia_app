@@ -6,7 +6,7 @@
   <p><strong>Nombre completo:</strong> <%= [@customer.first_name, @customer.middle_name, @customer.last_name, @customer.second_last_name].compact.join(' ') %></p>
   <p><strong>Documento:</strong> <%= "#{@customer.document_type} #{@customer.document_number}" %></p>
   <p><strong>Teléfonos:</strong> <%= [@customer.mobile_phone1, @customer.mobile_phone2, @customer.landline_phone].compact.join(' / ') %></p>
-  <p><strong>Email:</strong> <%= @customer.email %></p>
+  <p><strong>Email:</strong> <%= @customer.company.contact_email %></p>
   <p><strong>Dirección:</strong> <%= [@customer.address1, @customer.address2].compact.join(', ') %></p>
 </div>
 

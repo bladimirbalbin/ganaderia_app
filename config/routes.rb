@@ -9,7 +9,8 @@ Rails.application.routes.draw do
 
   # Devise (usuarios)
   devise_for :users, controllers: {
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    passwords: "users/passwords"
   }
 
   # Usuarios
@@ -17,6 +18,9 @@ Rails.application.routes.draw do
     member do
       get :edit_password
       patch :change_password
+      get :reset_password
+      post :reset_password
+      post :generate_temp_password
     end
   end
 
@@ -39,4 +43,24 @@ Rails.application.routes.draw do
 
   # Customers
   resources :customers, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+
+  # Ganado y eventos
+  resources :animals do
+    resources :inseminations, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :palpations, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :births, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :milk_productions, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :weight_records, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :animal_events, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+    resources :medical_records, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+  end
+
+  # Eventos independientes (para reportes y dashboards)
+  resources :inseminations, only: [:index]
+  resources :palpations, only: [:index]
+  resources :births, only: [:index]
+  resources :milk_productions, only: [:index]
+  resources :weight_records, only: [:index]
+  resources :animal_events, only: [:index]
+  resources :medical_records, only: [:index]
 end

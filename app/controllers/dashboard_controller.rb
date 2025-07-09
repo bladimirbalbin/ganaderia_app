@@ -10,12 +10,14 @@ class DashboardController < ApplicationController
       return
     end
 
-    if @user.company&.is_provider?
+    if @user.provider?
+      # Usuario de empresa proveedora - acceso completo al sistema
       @companies = Company.all
       @users = User.all
       @membership_plans = MembershipPlan.all
 
     elsif @user.admin?
+      # Administrador de empresa cliente
       @company = @user.company
       if @company.present?
         @users = @company.users
@@ -25,10 +27,18 @@ class DashboardController < ApplicationController
       end
 
     elsif @user.veterinario?
+      # Veterinario
       @animals = Animal.where(veterinario_id: @user.id)
 
     else
-      redirect_to root_path, alert: "No tienes permisos para ver este panel"
+      # Usuario normal
+      @company = @user.company
+      if @company.present?
+        @users = @company.users
+      else
+        flash[:alert] = "Tu cuenta no tiene una empresa asignada. Contacta al administrador."
+        redirect_to root_path and return
+      end
     end
   end
 end

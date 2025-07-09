@@ -1,29 +1,106 @@
-<%# app/views/users/index.html.erb %>
-<h1 class="text-2xl font-semibold mb-4">Usuarios</h1>
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+      <p class="mt-2 text-sm text-gray-600">Administra los usuarios del sistema</p>
+    </div>
 
-<table class="table-default">
-  <thead class="bg-gray-100">
-    <tr>
-      <th class="th-default">Email</th>
-      <th class="th-default">Rol</th>
-      <th class="th-default">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
-      <tr class="tr-hover">
-        <td class="td-default"><%= user.email %></td>
-        <td class="td-default"><%= user.role&.name || "-" %></td>
-        <td class="td-default"><%= user.company&.name || "-" %></td>
-        <td class="td-default space-x-2">
-          <%= link_to "Ver", user_path(user), class: "btn-primary" %>
-          ...
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <!-- Users Table -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+          <h2 class="text-lg font-medium text-gray-900">Lista de Usuarios</h2>
+          <% if current_user.can?(:manage_users) %>
+            <%= link_to new_user_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+              <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Nuevo Usuario
+            <% end %>
+          <% end %>
+        </div>
+      </div>
 
-<div class="mt-4">
-  <%= link_to "Nuevo usuario", new_user_path, class: "btn-primary" %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @users.each do |user| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="text-sm font-medium text-gray-700"><%= user.email.first.upcase %></span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900"><%= user.email %></div>
+                      <div class="text-sm text-gray-500">Registrado: <%= user.created_at.strftime("%d/%m/%Y") %></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= user.company&.name || 'Sin empresa' %></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= user.role&.name == 'Admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
+                    <%= user.role&.name || 'Sin rol' %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if user.company&.is_provider? %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                      Proveedor
+                    </span>
+                  <% else %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= user.company&.membership_active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                      <%= user.company&.membership_active? ? 'Activo' : 'Inactivo' %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <%= link_to user_path(user), class: "text-blue-600 hover:text-blue-900" do %>
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  <% end %>
+                  
+                  <% if current_user.can?(:manage_users) %>
+                    <%= link_to edit_user_path(user), class: "text-indigo-600 hover:text-indigo-900" do %>
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    <% end %>
+                    
+                    <%= link_to reset_password_user_path(user), class: "text-yellow-600 hover:text-yellow-900", title: "Restablecer contraseña" do %>
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                      </svg>
+                    <% end %>
+                    
+                    <%= link_to user_path(user), method: :delete, data: { confirm: "¿Estás seguro de que quieres eliminar este usuario?" }, class: "text-red-600 hover:text-red-900" do %>
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

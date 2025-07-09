@@ -1,46 +1,211 @@
 <%# app/views/customers/edit.html.erb %>
-<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
-  <h1 class="text-2xl font-bold mb-4">Completa tus datos de facturación</h1>
-  <p class="mb-6 text-gray-500">Estos datos son necesarios para emitir facturas correctamente.</p>
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Datos de Facturación</h1>
+    <p class="mt-2 text-gray-600">Completa la información necesaria para la emisión de facturas de tu empresa.</p>
+  </div>
+
+  <% if !customer_incomplete?(@customer) %>
+    <!-- Mensaje de éxito cuando los datos están completos -->
+    <div class="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-green-800">¡Datos de facturación completados!</h3>
+          <div class="mt-2 text-sm text-green-700">
+            <p>Todos los datos requeridos están completos. Puedes guardar los cambios o continuar con la selección de tu plan de membresía.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
   <%= form_with(model: @customer, local: true) do |form| %>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-      <div>
-        <%= form.label :first_name, "Primer nombre", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.text_field :first_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+    
+    <!-- Tipo de Cliente -->
+    <div class="mb-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Tipo de Cliente</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <%= form.radio_button :customer_type, 'company', class: "mr-3 customer-type-radio" %>
+          <div>
+            <div class="font-medium">Empresa</div>
+            <div class="text-sm text-gray-500">Facturación empresarial</div>
+          </div>
+        </label>
+        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <%= form.radio_button :customer_type, 'person', class: "mr-3 customer-type-radio" %>
+          <div>
+            <div class="font-medium">Persona Natural</div>
+            <div class="text-sm text-gray-500">Facturación personal</div>
+          </div>
+        </label>
+        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <%= form.radio_button :customer_type, 'veterinarian', class: "mr-3 customer-type-radio" %>
+          <div>
+            <div class="font-medium">Veterinario</div>
+            <div class="text-sm text-gray-500">Profesional independiente</div>
+          </div>
+        </label>
       </div>
-
-      <div>
-        <%= form.label :last_name, "Primer apellido", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.text_field :last_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-
-      <div>
-        <%= form.label :document_type, "Tipo de documento", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.select :document_type, [["C - Cédula de ciudadanía", "C"], ["E - Cédula de extranjería", "E"], ["N - NIT", "N"], ["T - Tarjeta de identidad", "T"]], {}, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-
-      <div>
-        <%= form.label :document_number, "Número de documento", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.text_field :document_number, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-
-      <div>
-        <%= form.label :address1, "Dirección principal", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.text_field :address1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-
-      <div>
-        <%= form.label :mobile_phone1, "Celular principal", class: "block text-gray-700 font-medium mb-2" %>
-        <%= form.text_field :mobile_phone1, class: "w-full border border-gray-300 rounded px-3 py-2" %>
-      </div>
-
     </div>
 
-    <div class="mt-6 flex justify-end space-x-4">
-      <%= form.submit "Guardar datos", class: "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition" %>
-      <%= link_to "Cancelar", dashboard_path, class: "bg-gray-300 text-gray-800 px-5 py-2 rounded hover:bg-gray-400 transition" %>
+    <!-- Información Principal -->
+    <div class="mb-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Información Principal</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div>
+          <%= form.label :first_name, "Nombre / Razón Social", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :first_name, 
+              placeholder: "Nombre de la empresa o persona",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          <p class="text-sm text-gray-500 mt-1">Nombre completo de la empresa o persona</p>
+        </div>
+
+        <div>
+          <%= form.label :last_name, "Apellido / Nombre Comercial", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :last_name, 
+              placeholder: "Apellido o nombre comercial",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          <p class="text-sm text-gray-500 mt-1">Apellido (persona) o nombre comercial (empresa)</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Documento de Identificación -->
+    <div class="mb-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Documento de Identificación</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div>
+          <%= form.label :document_type, "Tipo de documento", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.select :document_type, 
+              [
+                ["NIT - Empresa", "N"],
+                ["Cédula de Ciudadanía", "C"],
+                ["Cédula de Extranjería", "E"],
+                ["Tarjeta de Identidad", "T"]
+              ], 
+              { prompt: "Selecciona el tipo de documento" },
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= form.label :document_number, "Número de documento", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :document_number, 
+              placeholder: "Ej: 12345678-9 o 900123456-7",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Información de Contacto -->
+    <div class="mb-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Información de Contacto</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div>
+          <%= form.label :address1, "Dirección principal", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :address1, 
+              placeholder: "Calle, número, ciudad, departamento",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= form.label :mobile_phone1, "Teléfono / Celular", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :mobile_phone1, 
+              placeholder: "Ej: 300 123 4567",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= form.label :mobile_phone2, "Teléfono secundario (opcional)", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :mobile_phone2, 
+              placeholder: "Teléfono adicional",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div>
+          <%= form.label :landline_phone, "Teléfono fijo (opcional)", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :landline_phone, 
+              placeholder: "Ej: 1 234 5678",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Información Adicional -->
+    <div class="mb-6" id="additional-info">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Información Adicional</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div>
+          <%= form.label :address2, "Dirección secundaria (opcional)", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :address2, 
+              placeholder: "Información adicional de dirección",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div class="person-only-field">
+          <%= form.label :middle_name, "Segundo nombre (opcional)", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :middle_name, 
+              placeholder: "Segundo nombre",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+        <div class="person-only-field">
+          <%= form.label :second_last_name, "Segundo apellido (opcional)", class: "block text-gray-700 font-medium mb-2" %>
+          <%= form.text_field :second_last_name, 
+              placeholder: "Segundo apellido",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="flex justify-end space-x-4 pt-6 border-t">
+      <%= link_to "Cancelar", dashboard_path, 
+          class: "px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition duration-150 ease-in-out" %>
+      <%= form.submit "Guardar Datos de Facturación", 
+          class: "px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-150 ease-in-out" %>
     </div>
   <% end %>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const customerTypeRadios = document.querySelectorAll('.customer-type-radio');
+  const personOnlyFields = document.querySelectorAll('.person-only-field');
+  
+  function togglePersonFields() {
+    const selectedType = document.querySelector('input[name="customer[customer_type]"]:checked');
+    
+    if (selectedType && selectedType.value === 'company') {
+      personOnlyFields.forEach(field => {
+        field.style.display = 'none';
+      });
+    } else {
+      personOnlyFields.forEach(field => {
+        field.style.display = 'block';
+      });
+    }
+  }
+  
+  // Ejecutar al cargar la página
+  togglePersonFields();
+  
+  // Ejecutar cuando cambie el tipo de cliente
+  customerTypeRadios.forEach(radio => {
+    radio.addEventListener('change', togglePersonFields);
+  });
+});
+</script>

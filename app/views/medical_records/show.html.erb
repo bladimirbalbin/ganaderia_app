@@ -1,0 +1,71 @@
+<div class="min-h-screen bg-gray-50 py-6">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Registro Médico</h1>
+          <p class="mt-1 text-sm text-gray-500">Animal: <%= @animal.display_name %></p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to animal_medical_records_path(@animal), class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+          <% end %>
+          
+          <% if current_user.admin? || current_user.veterinario? %>
+            <%= link_to edit_animal_medical_record_path(@animal, @medical_record), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              Editar
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles del registro -->
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Fecha</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.display_date %></dd>
+          </div>
+          
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Veterinario</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.veterinarian %></dd>
+          </div>
+          
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500">Diagnóstico</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.diagnosis %></dd>
+          </div>
+          
+          <% if @medical_record.treatment.present? %>
+            <div class="sm:col-span-2">
+              <dt class="text-sm font-medium text-gray-500">Tratamiento</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.treatment %></dd>
+            </div>
+          <% end %>
+          
+          <% if @medical_record.notes.present? %>
+            <div class="sm:col-span-2">
+              <dt class="text-sm font-medium text-gray-500">Notas Adicionales</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.notes %></dd>
+            </div>
+          <% end %>
+          
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Días transcurridos</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= @medical_record.days_ago %> días</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

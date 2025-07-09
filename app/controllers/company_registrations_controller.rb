@@ -13,10 +13,18 @@ class CompanyRegistrationsController < ApplicationController
     @company = Company.new(company_params)
     # Le ponemos status inicial
     @company.subscription_status = "free"
-    @company.membership_plan = MembershipPlan.first # o el plan por defecto
-    @company.users_limit = 1
-    @company.active_until = 1.month.from_now
-
+    @company.active = true
+    
+    # Asignar plan por defecto si existe, si no, dejar sin plan
+    default_plan = MembershipPlan.where(active: true).first
+    if default_plan
+      @company.membership_plan = default_plan
+      @company.users_limit = default_plan.users_limit
+      @company.active_until = default_plan.duration_in_days.days.from_now
+    else
+      @company.users_limit = 1
+      @company.active_until = 1.month.from_now
+    end
 
     # Le asignamos el rol de Admin al primer user
     if @company.users.any?

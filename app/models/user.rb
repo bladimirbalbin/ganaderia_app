@@ -17,23 +17,27 @@ class User < ApplicationRecord
   attr_accessor :skip_document_validation
 
   def admin?
-    role.name == "Admin"
+    role&.name == "Admin"
   end
 
   def provider?
-    current_user.present? && current_user.company.present? && current_user.company.is_provider?
+    company&.is_provider?
   end
 
-
   def membership_active?
-    company.membership_active?
+    company&.membership_active?
   end
 
   def can_create_more_users?
-    company.can_create_more_users?
+    company&.can_create_more_users?
   end
 
   def veterinario?
     role&.name == "Veterinario"
   end         
+
+  def can?(permission_name)
+    return true if admin? # Los admins tienen todos los permisos
+    role.permissions.exists?(name: permission_name.to_s)
+  end
 end

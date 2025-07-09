@@ -1,0 +1,138 @@
+<div class="min-h-screen bg-gray-50 py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Historia Clínica</h1>
+          <p class="mt-1 text-sm text-gray-500">Animal: <%= @animal.display_name %></p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to animal_path(@animal), class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver al Animal
+          <% end %>
+          
+          <% if current_user.admin? || current_user.veterinario? %>
+            <%= link_to new_animal_medical_record_path(@animal), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Nuevo Registro
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white shadow rounded-lg mb-6">
+      <div class="px-4 py-5 sm:p-6">
+        <%= form_with url: animal_medical_records_path(@animal), method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-4 gap-4" do |form| %>
+          <div>
+            <%= form.label :search, "Buscar", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :search, value: params[:search], class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder: "Diagnóstico o notas" %>
+          </div>
+          
+          <div>
+            <%= form.label :veterinarian, "Veterinario", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :veterinarian, value: params[:veterinarian], class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder: "Nombre del veterinario" %>
+          </div>
+          
+          <div>
+            <%= form.label :date_from, "Desde", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.date_field :date_from, value: params[:date_from], class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          </div>
+          
+          <div>
+            <%= form.label :date_to, "Hasta", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.date_field :date_to, value: params[:date_to], class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          </div>
+          
+          <div class="md:col-span-4 flex justify-end">
+            <%= form.submit "Filtrar", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Lista de registros médicos -->
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <% if @medical_records.any? %>
+          <div class="space-y-4">
+            <% @medical_records.each do |record| %>
+              <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-3">
+                      <h3 class="text-lg font-medium text-gray-900"><%= record.diagnosis %></h3>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <%= record.display_date %>
+                      </span>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-600"><strong>Veterinario:</strong> <%= record.veterinarian %></p>
+                    <% if record.treatment.present? %>
+                      <p class="mt-1 text-sm text-gray-600"><strong>Tratamiento:</strong> <%= record.treatment %></p>
+                    <% end %>
+                    <% if record.notes.present? %>
+                      <p class="mt-1 text-sm text-gray-600"><strong>Notas:</strong> <%= record.notes %></p>
+                    <% end %>
+                  </div>
+                  
+                  <div class="flex space-x-2">
+                    <%= link_to animal_medical_record_path(@animal, record), class: "text-indigo-600 hover:text-indigo-900" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                    <% end %>
+                    
+                    <% if current_user.admin? || current_user.veterinario? %>
+                      <%= link_to edit_animal_medical_record_path(@animal, record), class: "text-yellow-600 hover:text-yellow-900" do %>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      <% end %>
+                      
+                      <%= link_to animal_medical_record_path(@animal, record), method: :delete, data: { confirm: '¿Estás seguro?' }, class: "text-red-600 hover:text-red-900" do %>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Paginación -->
+          <div class="mt-6">
+            <%= paginate @medical_records %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay registros médicos</h3>
+            <p class="mt-1 text-sm text-gray-500">Comienza agregando el primer registro médico.</p>
+            <% if current_user.admin? || current_user.veterinario? %>
+              <div class="mt-6">
+                <%= link_to new_animal_medical_record_path(@animal), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  Agregar Registro Médico
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

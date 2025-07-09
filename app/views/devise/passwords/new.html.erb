@@ -1,16 +1,66 @@
-<h2>Forgot your password?</h2>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
+        <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+        </svg>
+      </div>
+      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        ¿Olvidaste tu contraseña?
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Ingresa tu correo electrónico y te enviaremos instrucciones para restablecer tu contraseña.
+      </p>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <!-- Form -->
+    <div class="bg-white py-8 px-6 shadow-xl rounded-lg">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        <div>
+          <%= f.label :email, "Correo electrónico", class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.email_field :email, 
+                autofocus: true, 
+                autocomplete: "email",
+                class: "appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm",
+                placeholder: "tu@email.com" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Enviar instrucciones", 
+              class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out" %>
+        </div>
+      <% end %>
+
+      <!-- Links -->
+      <div class="mt-6 text-center">
+        <div class="text-sm">
+          <%= link_to "¿Ya tienes una cuenta? Inicia sesión", new_session_path(resource_name), 
+              class: "font-medium text-blue-600 hover:text-blue-500 transition duration-150 ease-in-out" %>
+        </div>
+        
+        <% if devise_mapping.registerable? %>
+          <div class="mt-2 text-sm">
+            <%= link_to "¿No tienes cuenta? Regístrate", new_registration_path(resource_name), 
+                class: "font-medium text-gray-600 hover:text-gray-500 transition duration-150 ease-in-out" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center">
+      <p class="text-xs text-gray-500">
+        ¿Necesitas ayuda? 
+        <a href="#" class="text-blue-600 hover:text-blue-500 transition duration-150 ease-in-out">
+          Contacta con soporte
+        </a>
+      </p>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
